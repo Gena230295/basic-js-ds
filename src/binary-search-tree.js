@@ -1,49 +1,133 @@
-const { NotImplementedError } = require('../extensions/index.js');
+const { NotImplementedError } = require("../extensions/index.js");
 
-// const { Node } = require('../extensions/list-tree.js');
+class Node {
+  constructor(data) {
+    this.data = data;
+    this.left = null;
+    this.right = null;
+  }
+}
 
-/**
-* Implement simple binary search tree according to task description
-* using Node from extensions
-*/
 class BinarySearchTree {
-
+  constructor() {
+    this.newRoot = null;
+  }
   root() {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+    return this.newRoot;
   }
 
-  add(/* data */) {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+  add(data) {
+    this.newRoot = addNewNum(this.newRoot, data);
+    function addNewNum(nodeAdd, data) {
+      if (!nodeAdd) {
+        return new Node(data);
+      }
+      if (nodeAdd.data === data) {
+        return nodeAdd;
+      }
+      if (data > nodeAdd.data) {
+        nodeAdd.right = addNewNum(nodeAdd.right, data);
+      } else {
+        nodeAdd.left = addNewNum(nodeAdd.left, data);
+      }
+      return nodeAdd;
+    }
   }
 
-  has(/* data */) {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+  has(data) {
+    return addNewSearch(this.newRoot, data);
+    function addNewSearch(nodeHas, data) {
+      if (!nodeHas) {
+        return false;
+      }
+      if (nodeHas.data === data) {
+        return true;
+      }
+      if (data > nodeHas.data) {
+        return addNewSearch(nodeHas.right, data);
+      } else {
+        return addNewSearch(nodeHas.left, data);
+      }
+    }
   }
 
-  find(/* data */) {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+  find(data) {
+    return addNewFind(this.newRoot, data);
+    function addNewFind(nodeFind, data) {
+      if (!nodeFind) {
+        return null;
+      }
+      if (nodeFind.data === data) {
+        return nodeFind;
+      }
+      if (data > nodeFind.data) {
+        return addNewFind(nodeFind.right, data);
+      }
+      if (data < nodeFind.data) {
+        return addNewFind(nodeFind.left, data);
+      }
+    }
   }
 
-  remove(/* data */) {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+  remove(data) {
+    this.newRoot = addNewRemove(this.newRoot, data);
+    function addNewRemove(nodeRemove, data) {
+      if (!nodeRemove) {
+        return null;
+      }
+      if (data > nodeRemove.data) {
+        nodeRemove.right = addNewRemove(nodeRemove.right, data);
+        return nodeRemove;
+      } else if (data < nodeRemove.data) {
+        nodeRemove.left = addNewRemove(nodeRemove.left, data);
+        return nodeRemove;
+      } else {
+        if (!nodeRemove.right && !nodeRemove.left) {
+          return null;
+        }
+        if (!nodeRemove.right) {
+          nodeRemove = nodeRemove.left;
+          return nodeRemove;
+        }
+        if (!nodeRemove.left) {
+          nodeRemove = nodeRemove.right;
+          return nodeRemove;
+        }
+        // orMinRight
+        let greatestAreaLeft = nodeRemove.left;
+        while (greatestAreaLeft.right) {
+          greatestAreaLeft = greatestAreaLeft.right;
+        }
+        nodeRemove.data = greatestAreaLeft.data;
+        nodeRemove.left = addNewRemove(nodeRemove.left, greatestAreaLeft.data);
+        return nodeRemove;
+      }
+    }
   }
 
   min() {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+    if (!this.newRoot) {
+      return;
+    }
+    let nodeNewMin = this.newRoot;
+    while (nodeNewMin.left) {
+      nodeNewMin = nodeNewMin.left;
+    }
+    return nodeNewMin.data;
   }
 
   max() {
-    throw new NotImplementedError('Not implemented');
-    // remove line with error and write your code here
+    if (!this.newRoot) {
+      return;
+    }
+    let nodeNewRight = this.newRoot;
+    while (nodeNewRight.right) {
+      nodeNewRight = nodeNewRight.right;
+    }
+    return nodeNewRight.data;
   }
 }
 
 module.exports = {
-  BinarySearchTree
+  BinarySearchTree,
 };
